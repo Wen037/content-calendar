@@ -1,11 +1,13 @@
 package dev.danvega.contentcalendar.repository;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.stereotype.Repository;
 
 import dev.danvega.contentcalendar.model.Content;
@@ -18,10 +20,16 @@ public class ContentJdbcTemplateRepository {
      * JdbcTemplate: A Spring class that simplifies database operations using JDBC.
      * This instance is used for executing SQL queries.
      */
+    //may not need anymore
     private final JdbcTemplate jdbcTemplate;
 
-    public ContentJdbcTemplateRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public ContentJdbcTemplateRepository() {
+        // Initialize DBConnect and get the connection
+        DBConnect.connect(); // Connect to the database
+        // Create a DataSource using the single connection from DBConnect
+        Connection connection = DBConnect.getConnection();
+        // Use SingleConnectionDataSource for JdbcTemplate
+        this.jdbcTemplate = new JdbcTemplate(new SingleConnectionDataSource(connection, false));
     }
     /*
      * This private static method maps a ResultSet row to a Content object.
@@ -33,10 +41,10 @@ public class ContentJdbcTemplateRepository {
         return new Content(rs.getInt("id"),
                 rs.getString("title"),
                 rs.getString("desc"),
-                Status.valueOf(rs.getString("status")),
-                Type.valueOf(rs.getString("content_type")),
-                rs.getObject("date_created", LocalDateTime.class),
-                rs.getObject("date_updated",LocalDateTime.class),
+                Status.valueOf(rs.getString("status")).toString(),
+                Type.valueOf(rs.getString("content_type")).toString(),
+               // rs.getObject("date_created", LocalDateTime.class),
+               // rs.getObject("date_updated",LocalDateTime.class),
                 rs.getString("url"));
     }
 

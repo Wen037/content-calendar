@@ -43,11 +43,11 @@ public class ContentCollectionRepository {
     }
 
     public Optional<Content> findById(Integer id) {
-        return contentList.stream().filter(c -> c.id().equals(id)).findFirst();
+        return contentList.stream().filter(c -> c.getId()==(id)).findFirst();
     }
 
     public void save(Content content) {
-        contentList.removeIf(c -> c.id().equals(content.id()));
+        contentList.removeIf(c -> c.getId()==(content.getId()));
         contentList.add(content);
     }
 
@@ -60,10 +60,10 @@ public class ContentCollectionRepository {
         Content content = new Content(1,
                 "My First Blog Post",
                 "My first blog post",
-                Status.IDEA,
-                Type.ARTICLE,
-                LocalDateTime.now(),
-                null,
+                Status.IDEA.toString(),
+                Type.ARTICLE.toString(),
+                //LocalDateTime.now(),
+                //null,
                 "");
 
         contentList.add(content);
@@ -71,10 +71,10 @@ public class ContentCollectionRepository {
     }
 
     public boolean existsById(Integer id) {
-        return contentList.stream().filter(c -> c.id().equals(id)).count() == 1;
+        return contentList.stream().filter(c -> c.getId()==(id)).count() == 1;
     }
 
     public void delete(Integer id) {
-        contentList.removeIf(c -> c.id().equals(id));
+        contentList.removeIf(c -> c.getId()==(id));
     }
 }
