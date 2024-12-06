@@ -23,14 +23,14 @@ import java.util.ArrayList;
 
 @Repository
 public class ContentRepository {
-    private static Connection connection=null;
+    private static Connection connection=DBConnect.connect();
     // Establish a connection to the database
     private void getConnection() throws SQLException {
         connection= DBConnect.connect();
     }
 
     public void save(Content content) {
-        String sql = "INSERT INTO Content (title, desc, status, content_type, date_created, url) VALUES (?, ?, ?, ?, NOW(), ?)";
+        String sql = "INSERT INTO Content (title, description, status, content_type, date_created, url) VALUES (?, ?, ?, ?, NOW(), ?)";
 
         // Use try-with-resources to ensure the PreparedStatement is closed properly
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -116,7 +116,7 @@ public class ContentRepository {
                 Content content = new Content();
                 content.setId(resultSet.getInt("id"));
                 content.setTitle(resultSet.getString("title"));
-                content.setDescription(resultSet.getString("desc"));
+                content.setDescription(resultSet.getString("description"));
                 content.setStatus(resultSet.getString("status"));
                 content.setContentType(resultSet.getString("content_type"));
                 content.setUrl(resultSet.getString("url"));
@@ -131,7 +131,7 @@ public class ContentRepository {
 
     // Insert a new content record
     public void createContent(Content content) {
-        String sql = "INSERT INTO Content (title, desc, status, content_type, date_created, url) VALUES (?, ?, ?, ?, NOW(), ?)";
+        String sql = "INSERT INTO Content (title, description, status, content_type, date_created, url) VALUES (?, ?, ?, ?, NOW(), ?)";
 
         try (
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -141,7 +141,7 @@ public class ContentRepository {
             statement.setString(3, content.getStatus());
             statement.setString(4, content.getContentType());
             statement.setString(5, content.getUrl());
-            statement.executeUpdate();
+            statement.executeQuery();
 
         } catch (SQLException e) {
             e.printStackTrace(); // Handle exceptions
@@ -150,7 +150,7 @@ public class ContentRepository {
 
     // Update an existing content record
     public void updateContent(Content content) {
-        String sql = "UPDATE Content SET title=?, desc=?, status=?, content_type=?, url=? WHERE id=?";
+        String sql = "UPDATE Content SET title=?, description=?, status=?, content_type=?, url=? WHERE id=?";
 
         try (
                 PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -204,7 +204,7 @@ public class ContentRepository {
     // Save all content records
     // Save all content records
     public void saveAll(List<Content> contents) {
-        String sql = "INSERT INTO Content (title, desc, status, content_type, date_created, url) VALUES (?, ?, ?, ?, NOW(), ?)";
+        String sql = "INSERT INTO Content (title, description, status, content_type, date_created, url) VALUES (?, ?, ?, ?, NOW(), ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
             for (Content content : contents) {

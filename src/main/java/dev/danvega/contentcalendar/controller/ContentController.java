@@ -107,7 +107,7 @@ public class ContentController {
     );
 
     // Save the updated content
-    repository.save(updatedContent);
+    repository.updateContent(updatedContent);
     }
 
 /*
